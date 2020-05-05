@@ -1,0 +1,68 @@
+name: Build
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set-up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+
+    - name: Set-up latest pip
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Cache Conan directory
+      id: cache-conan
+      uses: actions/cache@v1
+      with:
+        path: ~/.conan
+        key: ${{ runner.os }}-conan
+        restore-keys: |
+          ${{ runner.os }}-conan
+
+    - name: Get pip cache dir
+      id: pip-cache
+      run: |
+        echo "::set-output name=dir::$(pip cache dir)"
+
+    - name: pip cache
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.pip-cache.outputs.dir }}
+        key: ${{ runner.os }}-pip-1
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Set-up conan
+      run: |
+        pip install --upgrade conan
+
+    - name: Create the package
+      env:
+        PACKAGE_USER: yamadapc
+        PACKAGE_CHANNEL: stable
+      run: |
+        conan create -s cppstd=17 -s build_type=Release $GITHUB_WORKSPACE $PACKAGE_USER/$PACKAGE_CHANNEL
+
+    - name: Upload the package
+      env:
+        BINTRAY_URL: https://api.bintray.com/conan/yamadapc/yamadapc_conan
+        BINTRAY_REPOSITORY: yamadapc_conan
+        BINTRAY_TOKEN: ${{ secrets.BINTRAY_TOKEN }}
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+      run: |
+        conan remote add $BINTRAY_REPOSITORY $BINTRAY_URL
+        conan user -p $BINTRAY_TOKEN -r $BINTRAY_REPOSITORY $BINTRAY_USER
