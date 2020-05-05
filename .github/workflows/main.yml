@@ -69,6 +69,6 @@ jobs:
         BINTRAY_TOKEN: ${{ secrets.BINTRAY_TOKEN }}
         BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
       run: |
-        conan remote add $BINTRAY_REPOSITORY $BINTRAY_URLA || echo "Continuing"
+        conan remote add $BINTRAY_REPOSITORY $BINTRAY_URL || echo "Continuing"
         conan user -p $BINTRAY_TOKEN -r $BINTRAY_REPOSITORY $BINTRAY_USER
         conan upload --all -r yamadapc_conan "aws-lambda-cpp/*@yamadapc/*"
