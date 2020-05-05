@@ -217,11 +217,11 @@ class AwsLambdaCppConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_folder="./aws-lambda-cpp")
+        cmake.configure(source_folder="aws-lambda-cpp")
         cmake.build()
 
     def package(self):
-        self.copy("*.h", dst="include", src="./aws-lambda-cpp/include")
+        self.copy("*.h", dst="include", src="aws-lambda-cpp/include")
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.dylib", dst="lib", keep_path=False)
