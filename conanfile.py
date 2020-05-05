@@ -211,6 +211,9 @@ class AwsLambdaCppConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = {"shared": False}
     generators = "cmake"
+    requires = [
+        'libcurl/7.69.1'
+    ]
 
     def source(self):
         self.run("git clone -b v0.2.6 https://github.com/awslabs/aws-lambda-cpp")
