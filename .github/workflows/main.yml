@@ -71,3 +71,4 @@ jobs:
       run: |
         conan remote add $BINTRAY_REPOSITORY $BINTRAY_URL
         conan user -p $BINTRAY_TOKEN -r $BINTRAY_REPOSITORY $BINTRAY_USER
+        conan upload --all -r yamadapc_conan "aws-lambda-cpp/*@yamadapc/*"
