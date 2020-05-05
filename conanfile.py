@@ -213,7 +213,7 @@ class AwsLambdaCppConan(ConanFile):
     generators = "cmake"
 
     def source(self):
-        self.run("git clone v0.2.6 https://github.com/awslabs/aws-lambda-cpp")
+        self.run("git clone -b v0.2.6 https://github.com/awslabs/aws-lambda-cpp")
 
     def build(self):
         cmake = CMake(self)
